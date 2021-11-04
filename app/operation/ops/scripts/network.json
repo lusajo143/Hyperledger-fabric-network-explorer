@@ -1,0 +1,218 @@
+{
+  "name": "sample-network",
+  "description": "Sample network contains 4 peers (2 orgs), 1 orderer and 2 cas for Python SDK testing",
+  "version": "0.1",
+  "client": {
+    "organization": "Org1",
+    "credentialStore": {
+      "path": "/tmp/hfc-kvs",
+      "cryptoStore": {
+        "path": "/tmp/hfc-cvs"
+      },
+      "wallet": "wallet"
+    }
+  },
+  "organizations": {
+    "orderer.example.com": {
+      "mspid": "OrdererMSP",
+      "orderers": [
+        "orderer.example.com",
+        "orderer2.example.com",
+        "orderer3.example.com"
+      ],
+      "certificateAuthorities": [
+        "ca_orderer"
+      ],
+      "users": {
+        "Admin": {
+          "cert": "ops/cryptos/orderer/Admin/cert.pem",
+          "private_key": "ops/cryptos/orderer/Admin/key.pem"
+        }
+      }
+    },
+    "org1.example.com": {
+      "mspid": "Org1MSP",
+      "peers": [
+        "peer0.org1.example.com",
+        "peer1.org1.example.com"
+      ],
+      "certificateAuthorities": [
+        "ca.org1.example.com"
+      ],
+      "users": {
+        "Admin": {
+          "cert": "ops/cryptos/peerOrgs/org1/Admin/cert.pem",
+          "private_key": "ops/cryptos/peerOrgs/org1/Admin/key.pem"
+        },
+        "User1": {
+          "cert": "ops/cryptos/peerOrgs/org1/User1/cert.pem",
+          "private_key": "ops/cryptos/peerOrgs/org1/User1/key.pem"
+        }
+      }
+    },
+    "org2.example.com": {
+      "mspid": "Org2MSP",
+      "peers": [
+        "peer0.org2.example.com",
+        "peer1.org2.example.com"
+      ],
+      "certificateAuthorities": [
+        "ca.org2.example.com"
+      ],
+      "users": {
+        "Admin": {
+          "cert": "ops/cryptos/peerOrgs/org2/Admin/cert.pem",
+          "private_key": "ops/cryptos/peerOrgs/org2/Admin/key.pem"
+        },
+        "User1": {
+          "cert": "ops/cryptos/peerOrgs/org2/User1/cert.pem",
+          "private_key": "ops/cryptos/peerOrgs/org2/User1/key.pem"
+        }
+      }
+    },
+    "org3.example.com": {
+      "mspid": "Org3MSP",
+      "peers": [
+        "peer0.org3.example.com",
+        "peer1.org3.example.com"
+      ],
+      "certificateAuthorities": [
+        "ca.org3.example.com"
+      ],
+      "users": {
+        "Admin": {
+          "cert": "ops/cryptos/peerOrgs/org3/Admin/cert.pem",
+          "private_key": "ops/cryptos/peerOrgs/org3/Admin/key.pem"
+        },
+        "User1": {
+          "cert": "ops/cryptos/peerOrgs/org3/User1/cert.pem",
+          "private_key": "ops/cryptos/peerOrgs/org3/User1/key.pem"
+        }
+      }
+    }
+  },
+  "orderers": {
+    "orderer.example.com": {
+      "url": "orderer.example.com:7050",
+      "grpcOptions": {
+        "grpc.ssl_target_name_override": "orderer.example.com",
+        "grpc-max-send-message-length": 15
+      },
+      "tlsCACerts": {
+        "path": "ops/cryptos/orderer/tls-ca/tls.pem"
+      }
+    }
+  },
+  "peers": {
+    "peer0.org1.example.com": {
+      "url": "peer0.org1.example.com:7051",
+      "eventUrl": "peer0.org1.example.com:7053",
+      "grpcOptions": {
+        "grpc.ssl_target_name_override": "peer0.org1.example.com",
+        "grpc.http2.keepalive_time": 15
+      },
+      "tlsCACerts": {
+        "path": "ops/cryptos/peerOrgs/org1/tls-ca/ca.pem"
+      }
+    },
+    "peer1.org1.example.com": {
+      "url": "peer1.org1.example.com:8051",
+      "eventUrl": "peer1.org1.example.com:8053",
+      "grpcOptions": {
+        "grpc.ssl_target_name_override": "peer1.org1.example.com"
+      },
+      "tlsCACerts": {
+        "path": "ops/cryptos/peerOrgs/org1/tls-ca/ca.pem"
+      }
+    },
+    "peer0.org2.example.com": {
+      "url": "peer0.org2.example.com:9051",
+      "eventUrl": "peer0.org2.example.com:9053",
+      "grpcOptions": {
+        "grpc.ssl_target_name_override": "peer0.org2.example.com",
+        "grpc.http2.keepalive_time": 15
+      },
+      "tlsCACerts": {
+        "path": "ops/cryptos/peerOrgs/org2/tls-ca/ca.pem"
+      }
+    },
+    "peer1.org2.example.com": {
+      "url": "peer1.org2.example.com:10051",
+      "eventUrl": "peer1.org2.example.com:10053",
+      "grpcOptions": {
+        "grpc.ssl_target_name_override": "peer1.org2.example.com"
+      },
+      "tlsCACerts": {
+        "path": "ops/cryptos/peerOrgs/org2/tls-ca/ca.pem"
+      }
+    },
+    "peer0.org3.example.com": {
+      "url": "peer0.org3.example.com:11051",
+      "eventUrl": "peer0.org3.example.com:11053",
+      "grpcOptions": {
+        "grpc.ssl_target_name_override": "peer0.org3.example.com",
+        "grpc.http2.keepalive_time": 15
+      },
+      "tlsCACerts": {
+        "path": "ops/cryptos/peerOrgs/org3/tls-ca/ca.pem"
+      }
+    },
+    "peer1.org3.example.com": {
+      "url": "peer1.org3.example.com:12051",
+      "eventUrl": "peer1.org3.example.com:12053",
+      "grpcOptions": {
+        "grpc.ssl_target_name_override": "peer1.org3.example.com"
+      },
+      "tlsCACerts": {
+        "path": "ops/cryptos/peerOrgs/org3/tls-ca/ca.pem"
+      }
+    }
+  },
+  "certificateAuthorities": {
+    "ca.org1.example.com": {
+      "url": "https://ca.org1.example.com:7054",
+      "grpcOptions": {
+        "verify": true
+      },
+      "tlsCACerts": {
+        "path": "ops/cryptos/peerOrgs/org1/tls-ca/ca.pem"
+      },
+      "registrar": [
+        {
+          "enrollId": "admin",
+          "enrollSecret": "adminpw"
+        }
+      ]
+    },
+    "ca.org2.example.com": {
+      "url": "https://ca.org2.example.com:8054",
+      "grpcOptions": {
+        "verify": true
+      },
+      "tlsCACerts": {
+        "path": "ops/cryptos/peerOrgs/org2/tls-ca/ca.pem"
+      },
+      "registrar": [
+        {
+          "enrollId": "admin",
+          "enrollSecret": "adminpw"
+        }
+      ]
+    },
+    "ca.org3.example.com": {
+      "url": "https://ca.org3.example.com:10054",
+      "grpcOptions": {
+        "verify": true
+      },
+      "tlsCACerts": {
+        "path": "ops/cryptos/peerOrgs/org3/tls-ca/ca.pem"
+      },
+      "registrar": [
+        {
+          "enrollId": "admin",
+          "enrollSecret": "adminpw"
+        }
+      ]
+    }
+  }
+}

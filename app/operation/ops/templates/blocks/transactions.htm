@@ -1,0 +1,156 @@
+{% extends "base.htm" %}
+{% block content %}
+
+<div class="row">
+    <div class="col p-4">
+        <h4 style="color: #003d99; font-weight: bold;">Transactions ({{ transactions|length }})</h4>
+    </div>
+</div>
+
+
+
+{% for transaction in transactions %}
+<div class="row">
+    <div class="col">
+        <div class="pb-3">
+            <div class="table-responsive">
+                <div class="card border-light shadow-sm">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td style="padding-left: 30px;" class="col-md-2">Block:</td>
+                                <td class="col-md-10"> {{ blockNo }} </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-left: 30px;" class="col-md-2">Transaction Id:</td>
+                                <td class="col-md-10"> {{ transaction.tx_id }} </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-left: 30px;" class="col-md-2">Version:</td>
+                                <td class="col-md-10"> {{ transaction.version }} </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-left: 30px;" class="col-md-2">Timestamp:</td>
+                                <td class="col-md-10"> {{ transaction.timestamp }} </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-left: 30px;" class="col-md-2">Channel id:</td>
+                                <td class="col-md-10"> {{ transaction.channel_id }} </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-left: 30px;" class="col-md-2">Creator:</td>
+                                <td class="col-md-10"> {{ transaction.creator }} </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-left: 30px;" class="col-md-2">Transaction nonce:</td>
+                                <td class="col-md-10"> {{ transaction.tx_nonce }} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+
+                {% for data in transaction.data_section %}
+                <br>
+                {% if data.rwset %}
+                {% for r_w in data.rwset %}
+
+                {% if r_w.reads %}
+                <div class="card border-light shadow-sm" style="padding-top: 10px;">
+                    <span style="margin-left: 30px; font-weight: bold;">Reads</span>
+                    {% for read in r_w.reads %}
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td style="padding-left: 30px;" class="col-md-2">Key:</td>
+                                <td class="col-md-10"> {{ read.key }} </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-left: 30px;" class="col-md-2">From block:</td>
+                                <td class="col-md-10"> {{ read.from_block }} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    {% endfor %}
+                </div>
+
+                {% endif %}
+                {% if r_w.writes %}
+                <br>
+                <div class="card border-light shadow-sm" style="padding-top: 10px;">
+                    <span style="margin-left: 30px; font-weight: bold;">Writes</span>
+                    {% for write in r_w.writes %}
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td style="padding-left: 30px;" class="col-md-2">Key:</td>
+                                <td class="col-md-10"> {{ write.key }} </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-left: 30px;" class="col-md-2">value:</td>
+                                <td class="col-md-10"> {{ write.value }} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    {% endfor%}
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% else %}
+
+                {% endif %}
+
+                {% if data.response %}
+                <!-- Chaincode -->
+                <div class="card border-light shadow-sm" style="padding-top: 10px;">
+                    <span style="margin-left: 30px; font-weight: bold;">Response</span>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td style="padding-left: 30px;" class="col-md-2">Status</td>
+                                <td class="col-md-10"> {{ data.response.status }} </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-left: 30px;" class="col-md-2">Payload:</td>
+                                <td class="col-md-10"> {{ data.response.payload }} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+
+                {% if data.chaincode %}
+                <div class="card border-light shadow-sm" style="padding-top: 10px;">
+                    <span style="margin-left: 30px; font-weight: bold;">Chaicode</span>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td style="padding-left: 30px;" class="col-md-2">Name</td>
+                                <td class="col-md-10"> {{ data.chaincode.name }} </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-left: 30px;" class="col-md-2">Version:</td>
+                                <td class="col-md-10"> {{ data.chaincode.version }} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+
+
+                {% endfor %}
+
+
+                <!-- <ul class="list-group" style="margin-left: 30px; margin-right: 30px; margin-top: 10px;">
+                    <li class="list-group-item">s</li>
+                    <li class="list-group-item">3</li>
+                </ul> -->
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+
+{% endblock content %}

@@ -1,0 +1,176 @@
+{% extends "base.htm" %}
+{% block content %}
+
+<div class="row">
+    <div class="col mt-3 mb-3">
+        <h4>Dashboard</h4>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3 mt-2">
+        <div class="card shadow-sm border-light">
+            <div class="row">
+                <div class="col-md-4">
+                    <i class="fa fa-building"
+                        style="font-size: 80px; margin-left: 20px; margin-top: 20px; color: green;"
+                        aria-hidden="true"></i>
+                </div>
+                <div class="col-8">
+                    <div style="float: right; padding-right: 20px;">
+                        <h5 style="margin-top: 20px;">Organizations</h5>
+                        <span style="float: right; font-size: 50px;">{{ orgs }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mt-2">
+        <div class="card shadow-sm border-light">
+            <div class="row">
+                <div class="col-md-4">
+                    <i class="fa fa-users" style="font-size: 80px; margin-left: 20px; margin-top: 20px; color: grey;"
+                        aria-hidden="true"></i>
+                </div>
+                <div class="col-8">
+                    <div style="float: right; padding-right: 20px;">
+                        <h5 style="margin-top: 20px;">Identities</h5>
+                        <span style="float: right; font-size: 50px;">{{ users }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mt-2">
+        <div class="card shadow-sm border-light">
+            <div class="row">
+                <div class="col-md-4">
+                    <i class="fa fa-database"
+                        style="font-size: 80px; margin-left: 20px; margin-top: 20px; color: orange;"
+                        aria-hidden="true"></i>
+                </div>
+                <div class="col-8">
+                    <div style="float: right; padding-right: 20px;">
+                        <h5 style="margin-top: 20px;">Peers</h5>
+                        <span style="float: right; font-size: 50px;">{{ peers }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mt-2">
+        <div class="card shadow-sm border-light">
+            <div class="row">
+                <div class="col-md-4">
+                    <i class="fa fa-sort" style="font-size: 80px; margin-left: 20px; margin-top: 20px; color: #003d99 ;"
+                        aria-hidden="true"></i>
+                </div>
+                <div class="col-8">
+                    <div style="float: right; padding-right: 20px;">
+                        <h5 style="margin-top: 20px;"> Orderer Orgs</h5>
+                        <span style="float: right; font-size: 50px;">{{ orderers }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<hr class="mt-4 mb-4" style="color: gray;">
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow-sm border-light p-4">
+            <h4>Channels</h4>
+            <div id="chart" style="width: 100%; height: 300px;"></div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-sm border-light p-4 d-inline-block" style="width: 100%;">
+            <h4>Identities</h4>
+            <div id="users" style="width: 64%; height: 30px;"></div>
+        </div>
+        
+    </div>
+
+</div>
+<hr class="mt-4 mb-4" style="color: gray;">
+
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+
+    var cat = new Array()
+    var data = new Array()
+
+    {% for data in channels %}
+
+    cat.push("{{ data.name }}")
+    data.push(parseInt("{{ data.blocks }}"))
+
+    {% endfor %}
+
+    var options = {
+        series: [{
+            data: data
+        }],
+        chart: {
+            type: 'bar',
+            height: 350
+        },
+        plotOptions: {
+            bar: {
+                borderRadius: 4,
+                horizontal: true,
+            }
+        },
+        dataLabels: {
+            enabled: true
+        },
+        xaxis: {
+            categories: cat,
+        }
+    };
+
+    var chart = new ApexCharts(document.querySelector("#chart"), options);
+    chart.render();
+
+    let series = new Array()
+    let labels = new Array()
+    {% for key in userKeys %}
+    labels.push("{{ key }}")
+    {% endfor %}
+    
+    {% for value in userValues %}
+    series.push(parseInt("{{ value }}"))
+    {% endfor %}
+
+    /**
+     * Users
+     * */
+    var options = {
+        series: series,
+        labels: labels,//JSON.parse("{{ userKeys }}"),
+        chart: {
+            type: 'donut',
+        },
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: {
+                    width: 80
+                },
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }]
+    };
+
+    var chart = new ApexCharts(document.querySelector("#users"), options);
+    chart.render();
+    
+</script>
+
+{% endblock content %}

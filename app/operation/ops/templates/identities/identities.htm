@@ -1,0 +1,89 @@
+{% extends 'base.htm' %}
+{% block content %}
+
+<div class="row m-3">
+    <div class="col">
+        <div class="card border-light shadow-sm">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Identity</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Affiliation</th>
+                                <th scope="col">Max_enrollments</th>
+                                <th scope="col">Has Attrs</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for id in ids %}
+                            <tr>
+                                <td> {{ id.id }}</td>
+                                <td> {{ id.type }}</td>
+
+                                {% if id.affiliation != '' %}
+                                <td><span>{{ id.affiliation }}</span></td>
+                                {% else %}
+                                <td><span class="badge rounded-pill bg-warning">None</span></td>
+                                {% endif %}
+
+                                <td>{{ id.max_enrollments }}</td>
+
+                                {% if id.attrs|length > 0 %}
+                                <td> <span class="badge rounded-pill bg-success">True</span>
+                                </td>
+                                {% else %}
+                                <td> <span class="badge rounded-pill bg-danger">False</span>
+                                </td>
+                                {% endif %}
+                                <td>
+                                    <span class="badge rounded-pill bg-success btn"><i class="fa fa-check"></i></span>
+                                    <span class="badge rounded-pill bg-danger btn"><i class="fa fa-times"></i></span>
+                                    <span class="badge rounded-pill bg-light btn" onclick="view({{ id.attrs }})" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fa fa-eye" style="color: black;"></i></span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Identity Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+              <div class="col">
+                <table class="table-borderless table">
+                    <tr>
+                        <td class="fw-bold">Id</td>
+                        <td>Value</td>
+                    </tr>
+                </table>
+              </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<script>
+    function view(attrs) {
+        alert(attrs)
+    }
+</script>
+
+
+{% endblock content %}

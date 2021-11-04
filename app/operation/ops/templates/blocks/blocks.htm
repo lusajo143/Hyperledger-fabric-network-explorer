@@ -1,0 +1,227 @@
+{% extends 'base.htm' %}
+
+{% block content %}
+
+
+<div class="row align-items-center">
+    <div class="col-md-6 offset-md-3 p-4">
+        <form action="#" method="post">
+            <div class="row">
+                <div class="col-auto">
+                    <label for="channel_select" class="mt-2" style="font-weight: bold;">Channel: </label>
+                </div>
+                <div class="form-group col">
+                    <select name="channel" id="channel_select" class="form-control" onchange="changeChannel()">
+                        {% for channel in channels %}
+                        {% if channel.channel_id == channel_selected %}
+                        <option selected="selected" value="{{ channel.channel_id }}"> {{ channel.channel_id }} </option>
+                        {% else %}
+                        <option value="{{ channel.channel_id }}"> {{ channel.channel_id }} </option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<hr class="mt-4 mb-4" style="color: gray;">
+
+<div class="row p-3">
+    <div class="col-md-6 p-3">
+        <div style="float: left;">
+            <h4>Blocks</h4>
+        </div>
+
+        <div style="float: right;"><a href="#" class="btn shadow-sm bg-white">Timeline</a></div>
+        <ul class="timeline" style="margin-top: 65px;">
+            {% for block in blocks %}
+            <li>
+                <div class="card border-light shadow-sm block" style="padding: 20px;" onclick="viewRaw('{{ block.number }}')">
+                    <div class="row">
+                        <div class="col-md-3" style="font-size: 40px; margin-top: 5px;">
+                            <i class="fa fa-cube"></i>
+                            {{ block.number }}
+                        </div>
+                        <div class="col-md-9">
+                            <strong>Data Hash:</strong> <span> {{ block.data_hash }} </span><br>
+                            <strong>Previous Hash:</strong> <span> {{ block.previous_hash }} </span><br>
+                            <strong>Transactions:</strong> <span> {{ block.transactions }} </span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="col-md-6 p-3">
+
+        <div style="float: left;">
+            <h4>Total: {{ total }}</h4>
+        </div>
+        <div style="float: right;">
+            <div class="input-group">
+                <div class="form-outline">
+                    <input type="text" id="searchBlock" class="form-control" placeholder="Block number" />
+                </div>
+                <button class="btn btn-primary" onclick="search()">
+                    <i class="fa fa-search"></i> Search
+                </button>
+            </div>
+        </div>
+
+        <!-- <div style="float: right;"><a href="#" class="btn shadow-sm bg-light">Block Details</a></div> -->
+        <div class="card border-light shadow-sm p-3" style="margin-top: 65px;" id="raw">
+            <div class="row">
+                <div class="table-responsive">
+                    <table class="table table-hover fs-6">
+                        <thead>
+                            <tr>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th class="col">Block Number</th>
+                                <td class="col">
+                                    <p id="td_num">{{ latest.number }}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Data Hash</th>
+                                <td id="td_data"> {{ latest.data_hash }} </td>
+                            </tr>
+                            <tr>
+                                <th>Previous Hash</th>
+                                <td id="td_prev"> {{ latest.previous_hash }} </td>
+                            </tr>
+                            <tr>
+                                <th>Transactions</th>
+                                <td> <span id="td_trns">{{ latest.transactions }}</span> <a href="#" type="button"
+                                        onclick="transaction()" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                        (View)</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+<script>
+
+    function changeChannel() {
+        var channel = document.getElementById('channel_select').value
+
+        $.ajax({
+            url: '/blocks/',
+            type: 'POST',
+            headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+            data: { channel },
+            success: (data) => {
+                window.location.href = '/blocks'
+            }
+        }
+        )
+    }
+
+    function transaction() {
+        var number = $('#td_num').html()
+
+        window.location.href = "/get-trans?xaby=" + number
+
+    }
+
+    function search() {
+        var number = $('#searchBlock').val()
+
+        $.ajax({
+            url: '/get-raw',
+            type: 'POST',
+            headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+            data: { number },
+            success: (data) => {
+                data = JSON.parse(data)
+                $('#td_trns').text(data.transactions)
+                $('#td_data').text(data.data_hash)
+                $('#td_prev').text(data.previous_hash)
+                $('#td_num').text(data.number)
+            }
+        }
+        )
+
+    }
+
+    function viewRaw(number) {
+        $.ajax({
+            url: '/get-raw',
+            type: 'POST',
+            headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+            data: { number },
+            success: (data) => {
+                data = JSON.parse(data)
+                $('#td_trns').text(data.transactions)
+                $('#td_data').text(data.data_hash)
+                $('#td_prev').text(data.previous_hash)
+                $('#td_num').text(data.number)
+            }
+        }
+        )
+    }
+</script>
+
+
+<style>
+    .block {
+        cursor: pointer;
+    }
+
+    .block:hover {
+        box-shadow: 0px 0px 10px rgb(187, 187, 187);
+    }
+
+
+    ul.timeline {
+        list-style-type: none;
+        position: relative;
+    }
+
+    ul.timeline:before {
+        content: ' ';
+        background: #d4d9df;
+        display: inline-block;
+        position: absolute;
+        left: 29px;
+        width: 2px;
+        height: 100%;
+        z-index: 400;
+    }
+
+    ul.timeline>li {
+        margin: 20px 0;
+        padding-left: 20px;
+        margin-bottom: 50px;
+    }
+
+    ul.timeline>li:before {
+        content: ' ';
+        background: white;
+        display: inline-block;
+        position: absolute;
+        border-radius: 50%;
+        border: 3px solid #22c0e8;
+        left: 20px;
+        width: 20px;
+        height: 20px;
+        z-index: 400;
+    }
+</style>
+
+
+{% endblock content %}
